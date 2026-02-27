@@ -1,0 +1,197 @@
+1)Top 10 Jobs with the most applicants :
+
+db.applicants.find().sort({NumberofApplicants: -1}).limit(10)
+
+Output :
+{
+  _id: ObjectId("64385ebdae03f2a6530df41f"),
+  JobID: -2813721,
+  NoofApplicants: 122
+}
+{
+  _id: ObjectId("64385ebdae03f2a6530df420"),
+  JobID: -6650373,
+  NoofApplicants: 135
+}
+{
+  _id: ObjectId("64385ebdae03f2a6530df41b"),
+  JobID: -5748297,
+  NoofApplicants: 25
+}
+{
+  _id: ObjectId("64385ebdae03f2a6530df41e"),
+  JobID: -8408510,
+  NoofApplicants: 196
+}
+{
+  _id: ObjectId("64385ebdae03f2a6530df41c"),
+  JobID: -7296158,
+  NoofApplicants: 104
+}
+{
+  _id: ObjectId("64385ebcae03f2a6530df41a"),
+  JobID: -9150345,
+  NoofApplicants: 210
+}
+{
+  _id: ObjectId("64385ebcae03f2a6530df418"),
+  JobID: -5449910,
+  NoofApplicants: 63
+}
+{
+  _id: ObjectId("64385ebcae03f2a6530df417"),
+  JobID: -6528638,
+  NoofApplicants: 249
+}
+{
+  _id: ObjectId("64385ebcae03f2a6530df419"),
+  JobID: -5296408,
+  NoofApplicants: 153
+}
+
+
+
+2)Top Jobs with the highest salaries:
+
+db.job_listings.find({}, { _id: 0, JobID: 1, CompanyName: 1, Salary: 1 })
+              .sort({ Salary: -1 })
+              .limit(10)
+Output:
+{
+  JobID: -1175244,
+  CompanyName: 'LiveZ',
+  Salary: '95375.3'
+}
+{
+  JobID: -7564821,
+  CompanyName: 'Voomm',
+  Salary: '93297.64'
+}
+{
+  JobID: -2925686,
+  CompanyName: 'Thoughtworks',
+  Salary: '86691.96'
+}
+{
+  JobID: -9424595,
+  CompanyName: 'Kazu',
+  Salary: '76438.94'
+}
+{
+  JobID: -5449910,
+  CompanyName: 'Skivee',
+  Salary: '72554.83'
+}
+{
+  JobID: -7836812,
+  CompanyName: 'Kare',
+  Salary: '62159.12'
+}
+{
+  JobID: -9989541,
+  CompanyName: 'Centidel',
+  Salary: '57047.19'
+}
+{
+  JobID: -4218071,
+  CompanyName: 'Realfire',
+  Salary: '55437.38'
+}
+{
+  JobID: -8765811,
+  CompanyName: 'Skalith',
+  Salary: '53530.9'
+}
+
+3)all job listings with a job title that contains the word "Manager"
+
+
+db.job_listings.find({ JobTitle: /Manager/ })
+
+Output:
+{
+  _id: ObjectId("64385cc7ae03f2a6530df3c1"),
+  JobID: -4893372,
+  CompanyName: 'Jabbersphere',
+  JobTitle: 'General Manager',
+  Location: 'Lesnoye',
+  Salary: '106139.9'
+}
+{
+  _id: ObjectId("64385cc8ae03f2a6530df3c8"),
+  JobID: -2326164,
+  CompanyName: 'Devbug',
+  JobTitle: 'General Manager',
+  Location: 'Landivisiau',
+  Salary: '288761.81'
+}
+{
+  _id: ObjectId("64385cc8ae03f2a6530df3d0"),
+  JobID: -5037695,
+  CompanyName: 'Kayveo',
+  JobTitle: 'Marketing Manager',
+  Location: 'Khoyniki',
+  Salary: '268917.75'
+}
+{
+  _id: ObjectId("64385cc8ae03f2a6530df3e1"),
+  JobID: -5680930,
+  CompanyName: 'Flashdog',
+  JobTitle: 'Project Manager',
+  Location: 'Cigembor',
+  Salary: '333629.14'
+}
+{
+  _id: ObjectId("64385cc8ae03f2a6530df3e9"),
+  JobID: -4889558,
+  CompanyName: 'Gigabox',
+  JobTitle: 'Media Manager I',
+  Location: 'Butel',
+  Salary: '228377.67'
+}
+{
+  _id: ObjectId("64385cc8ae03f2a6530df406"),
+  JobID: -3491952,
+  CompanyName: 'Youspan',
+  JobTitle: 'Assistant Manager',
+  Location: 'Yuelai',
+  Salary: '238651.77'
+}
+{
+  _id: ObjectId("64385cc8ae03f2a6530df413"),
+  JobID: -3729476,
+  CompanyName: 'Flashspan',
+  JobTitle: 'Project Manager',
+  Location: 'Sezimovo ÃšstÃ­',
+  Salary: '348702.45'
+}
+
+4) Number of applicants for jobtitle : "Accountant I'
+
+db.applicants.aggregate([
+  {
+    $lookup: {
+      from: "job_listings",
+      localField: "JobID",
+      foreignField: "JobID",
+      as: "job"
+    }
+  },
+  {
+    $unwind: "$job"
+  },
+  {
+    $match: { "job.JobTitle": "Accountant I" }
+  },
+  {
+    $count: "TotalApplicants"
+  }
+])
+
+
+Output :
+
+{
+  TotalApplicants: 1
+}
+
